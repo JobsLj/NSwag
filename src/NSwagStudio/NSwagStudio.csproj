@@ -9,12 +9,20 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NSwagStudio</RootNamespace>
     <AssemblyName>NSwagStudio</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <DependsOnNETStandard>true</DependsOnNETStandard>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -25,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +43,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>NSwagStudio.App</StartupObject>
@@ -41,43 +51,106 @@
   <PropertyGroup>
     <ApplicationIcon>ApplicationIcon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr4.StringTemplate, Version=4.0.6.9004, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr4.StringTemplate.4.0.6.9004\lib\net35\Antlr4.StringTemplate.dll</HintPath>
+    <Reference Include="DotLiquid, Version=2.0.200.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.2.0.200\lib\net45\DotLiquid.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.3\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Expression.Interaction.3.0.40218.0\lib\net46\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights, Version=1.2.0.5639, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.1.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MyToolkit, Version=2.5.16.0, Culture=neutral, PublicKeyToken=3e349a1360994d26, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyToolkit.2.5.16\lib\portable-net45+wp8+win8+wpa81\MyToolkit.dll</HintPath>
     </Reference>
-    <Reference Include="MyToolkit, Version=2.4.2.0, Culture=neutral, PublicKeyToken=3e349a1360994d26, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyToolkit.2.4.2.0\lib\portable-net45+wp8+win8+wpa81\MyToolkit.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MyToolkit.Extended, Version=2.5.16.0, Culture=neutral, PublicKeyToken=3e349a1360994d26, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyToolkit.Extended.2.5.16\lib\net45\MyToolkit.Extended.dll</HintPath>
     </Reference>
-    <Reference Include="MyToolkit.Extended, Version=2.4.2.0, Culture=neutral, PublicKeyToken=3e349a1360994d26, processorArchitecture=MSIL">
-      <HintPath>..\packages\MyToolkit.Extended.2.4.2.0\lib\net45\MyToolkit.Extended.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NConsole, Version=3.9.6519.30868, Culture=neutral, PublicKeyToken=0f839b9a5b9cbd65, processorArchitecture=MSIL">
+      <HintPath>..\packages\NConsole.3.9.6519.30868\lib\net45\NConsole.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NJsonSchema, Version=1.10.5779.31942, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NJsonSchema.1.10.5779.31942\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+MonoTouch10\NJsonSchema.dll</HintPath>
+    <Reference Include="NJsonSchema, Version=9.10.19.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\packages\NJsonSchema.9.10.19\lib\net45\NJsonSchema.dll</HintPath>
     </Reference>
-    <Reference Include="NJsonSchema.CodeGeneration, Version=1.10.5779.31943, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NJsonSchema.CodeGeneration.1.10.5779.31943\lib\net45\NJsonSchema.CodeGeneration.dll</HintPath>
+    <Reference Include="NJsonSchema.CodeGeneration, Version=9.10.19.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\packages\NJsonSchema.CodeGeneration.9.10.19\lib\net451\NJsonSchema.CodeGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="NJsonSchema.CodeGeneration.CSharp, Version=9.10.19.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\packages\NJsonSchema.CodeGeneration.CSharp.9.10.19\lib\net451\NJsonSchema.CodeGeneration.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="NJsonSchema.CodeGeneration.TypeScript, Version=9.10.19.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\packages\NJsonSchema.CodeGeneration.TypeScript.9.10.19\lib\net451\NJsonSchema.CodeGeneration.TypeScript.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO">
+      <HintPath>..\libs\System.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\System.Net.Http.4.3.2\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime">
+      <HintPath>..\libs\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.Cryptography.Algorithms">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Expression.Interaction.3.0.40218.0\lib\net46\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -90,32 +163,50 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ISwaggerGenerator.cs" />
-    <Compile Include="ViewModels\ClientGenerators\SwaggerGeneratorViewModel.cs" />
-    <Compile Include="ViewModels\ClientGenerators\CSharpClientGeneratorViewModel.cs" />
-    <Compile Include="ViewModels\SwaggerGenerators\AssemblySwaggerGeneratorViewModel.cs" />
-    <Compile Include="ViewModels\SwaggerGenerators\WebApiSwaggerGeneratorViewModel.cs" />
+    <Compile Include="Controls\TabContent.cs" />
+    <Compile Include="Converters\NumberAdditionConverter.cs" />
+    <Compile Include="Converters\StringArrayConverter.cs" />
+    <Compile Include="ISwaggerGeneratorView.cs" />
+    <Compile Include="ViewModels\CodeGeneratorModel.cs" />
+    <Compile Include="ViewModels\CodeGenerators\SwaggerToCSharpControllerGeneratorViewModel.cs" />
+    <Compile Include="ViewModels\CodeGenerators\SwaggerOutputViewModel.cs" />
+    <Compile Include="ViewModels\CodeGenerators\SwaggerToCSharpClientGeneratorViewModel.cs" />
+    <Compile Include="ViewModels\DocumentModel.cs" />
+    <Compile Include="ViewModels\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\SwaggerGenerators\AssemblyTypeToSwaggerGeneratorViewModel.cs" />
+    <Compile Include="ViewModels\SwaggerGenerators\WebApiToSwaggerGeneratorViewModel.cs" />
     <Compile Include="ViewModels\MainWindowModel.cs" />
-    <Compile Include="IClientGenerator.cs" />
-    <Compile Include="ViewModels\ClientGenerators\TypeScriptCodeGeneratorViewModel.cs" />
+    <Compile Include="ViewModels\CodeGenerators\SwaggerToTypeScriptClientGeneratorViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Views\ClientGenerators\CSharpClientGeneratorView.xaml.cs">
-      <DependentUpon>CSharpClientGeneratorView.xaml</DependentUpon>
+    <Compile Include="Controls\AvalonEditBehavior.cs" />
+    <Compile Include="Views\CodeGenerators\CodeGeneratorViewBase.cs" />
+    <Compile Include="Views\CodeGenerators\SwaggerToCSharpControllerGeneratorView.xaml.cs">
+      <DependentUpon>SwaggerToCSharpControllerGeneratorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ClientGenerators\SwaggerGeneratorView.xaml.cs">
-      <DependentUpon>SwaggerGeneratorView.xaml</DependentUpon>
+    <Compile Include="Views\CodeGenerators\SwaggerToCSharpClientGeneratorView.xaml.cs">
+      <DependentUpon>SwaggerToCSharpClientGeneratorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SwaggerGenerators\AssemblySwaggerGeneratorView.xaml.cs">
-      <DependentUpon>AssemblySwaggerGeneratorView.xaml</DependentUpon>
+    <Compile Include="Views\CodeGenerators\SwaggerOutputView.xaml.cs">
+      <DependentUpon>SwaggerOutputView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SwaggerGenerators\JsonSchemaInputGeneratorView.xaml.cs">
-      <DependentUpon>JsonSchemaInputGeneratorView.xaml</DependentUpon>
+    <Compile Include="Views\CodeGenerators\Views\CSharpSettingsView.xaml.cs">
+      <DependentUpon>CSharpSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SwaggerGenerators\SwaggerInputGeneratorView.xaml.cs">
-      <DependentUpon>SwaggerInputGeneratorView.xaml</DependentUpon>
+    <Compile Include="Views\DocumentView.xaml.cs">
+      <DependentUpon>DocumentView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SwaggerGenerators\WebApiSwaggerGeneratorView.xaml.cs">
-      <DependentUpon>WebApiSwaggerGeneratorView.xaml</DependentUpon>
+    <Compile Include="Views\SwaggerGenerators\AssemblyTypeToSwaggerGeneratorView.xaml.cs">
+      <DependentUpon>AssemblyTypeToSwaggerGeneratorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SwaggerGenerators\JsonSchemaInputView.xaml.cs">
+      <DependentUpon>JsonSchemaInputView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SwaggerGenerators\SwaggerInputView.xaml.cs">
+      <DependentUpon>SwaggerInputView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\SwaggerGenerators\SwaggerInputViewModel.cs" />
+    <Compile Include="Views\SwaggerGenerators\WebApiToSwaggerGeneratorView.xaml.cs">
+      <DependentUpon>WebApiToSwaggerGeneratorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -124,30 +215,42 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\ClientGenerators\TypeScriptCodeGeneratorView.xaml.cs">
-      <DependentUpon>TypeScriptCodeGeneratorView.xaml</DependentUpon>
+    <Compile Include="Views\CodeGenerators\SwaggerToTypeScriptClientGeneratorView.xaml.cs">
+      <DependentUpon>SwaggerToTypeScriptClientGeneratorView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\ClientGenerators\CSharpClientGeneratorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ClientGenerators\SwaggerGeneratorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SwaggerGenerators\AssemblySwaggerGeneratorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SwaggerGenerators\JsonSchemaInputGeneratorView.xaml">
+    <Page Include="Views\CodeGenerators\SwaggerToCSharpControllerGeneratorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\SwaggerGenerators\SwaggerInputGeneratorView.xaml">
+    <Page Include="Views\CodeGenerators\SwaggerToCSharpClientGeneratorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SwaggerGenerators\WebApiSwaggerGeneratorView.xaml">
+    <Page Include="Views\CodeGenerators\SwaggerOutputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CodeGenerators\Views\CSharpSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocumentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SwaggerGenerators\AssemblyTypeToSwaggerGeneratorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SwaggerGenerators\JsonSchemaInputView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SwaggerGenerators\SwaggerInputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SwaggerGenerators\WebApiToSwaggerGeneratorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,7 +258,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ClientGenerators\TypeScriptCodeGeneratorView.xaml">
+    <Page Include="Views\CodeGenerators\SwaggerToTypeScriptClientGeneratorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -178,7 +281,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -186,20 +291,43 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Content Include="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NSwag.AssemblyLoader\NSwag.AssemblyLoader.csproj">
+      <Project>{46634C60-BA7D-43E6-9049-6AD461488C39}</Project>
+      <Name>NSwag.AssemblyLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSwag.CodeGeneration.CSharp\NSwag.CodeGeneration.CSharp.csproj">
+      <Project>{f0036da5-5dd4-494c-91b0-37689e00511e}</Project>
+      <Name>NSwag.CodeGeneration.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSwag.CodeGeneration.TypeScript\NSwag.CodeGeneration.TypeScript.csproj">
+      <Project>{9293CFCD-6C7B-43E0-9FBD-88753EBF64CC}</Project>
+      <Name>NSwag.CodeGeneration.TypeScript</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NSwag.CodeGeneration\NSwag.CodeGeneration.csproj">
       <Project>{75b3f91d-687e-4fb3-ad45-ccfa3c406db4}</Project>
       <Name>NSwag.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSwag.Commands\NSwag.Commands.csproj">
+      <Project>{71b39c21-46a2-471b-aace-226c575b8ac1}</Project>
+      <Name>NSwag.Commands</Name>
     </ProjectReference>
     <ProjectReference Include="..\NSwag.Core\NSwag.Core.csproj">
       <Project>{2E6174AA-FC75-4821-9E86-51B30568BEC0}</Project>
       <Name>NSwag.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NSwag\NSwag.csproj">
-      <Project>{26cbd69c-ee7c-4d81-8d62-410f4ad4876b}</Project>
-      <Name>NSwag</Name>
+    <ProjectReference Include="..\NSwag.SwaggerGeneration.WebApi\NSwag.SwaggerGeneration.WebApi.csproj">
+      <Project>{8A547CB0-930F-466D-92EB-E780FF14C0A6}</Project>
+      <Name>NSwag.SwaggerGeneration.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NSwag.SwaggerGeneration\NSwag.SwaggerGeneration.csproj">
+      <Project>{5EBE3EFF-9558-45F2-9C8F-5C8CFB74D574}</Project>
+      <Name>NSwag.SwaggerGeneration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -207,7 +335,26 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

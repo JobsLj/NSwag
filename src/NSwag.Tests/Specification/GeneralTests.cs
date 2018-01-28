@@ -1,40 +1,95 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NJsonSchema;
 
-namespace NSwag.Tests
+namespace NSwag.Tests.Specification
 {
     [TestClass]
     public class GeneralTests
     {
         [TestMethod]
-        public void WhenConvertingAndBackThenItShouldBeTheSame()
+        public async Task When_Swagger_is_loaded_from_url_then_it_works()
+        {
+            //// Arrange
+
+
+            //// Act
+            var document = await SwaggerDocument.FromUrlAsync("http://petstore.swagger.io/v2/swagger.json");
+
+            //// Assert
+            Assert.IsNotNull(document);
+        }
+
+        [TestMethod]
+        public async Task WhenConvertingAndBackThenItShouldBeTheSame()
         {
             //// Arrange
             var json = _sampleServiceCode;
 
             //// Act
-            var service = SwaggerService.FromJson(json);
-            var json2 = service.ToJson();
-            var reference = service.Paths["/pets"][SwaggerOperationMethod.Get].Responses["200"].Schema.Item.SchemaReference;
+            var document = await SwaggerDocument.FromJsonAsync(json);
+            var json2 = document.ToJson();
+            var reference = document.Paths["/pets"][SwaggerOperationMethod.Get].ActualResponses["200"].Schema.Item.Reference;
 
             //// Assert
             Assert.IsNotNull(json2);
             Assert.IsNotNull(reference);
             Assert.AreEqual(3, reference.Properties.Count);
+            Assert.IsTrue(document.Definitions["Pet"].Properties["id"].IsReadOnly);
+            Assert.IsFalse(json2.Contains(@"""readonly"""));
+            Assert.IsTrue(json2.Contains(@"""readOnly"""));
         }
 
         [TestMethod]
-        public void WhenGeneratingOperationIdsThenMissingIdsAreGenerated()
+        public async Task WhenGeneratingOperationIdsThenMissingIdsAreGenerated()
         {
             //// Arrange
             var json = _sampleServiceCode;
 
             //// Act
-            var service = SwaggerService.FromJson(json);
-            service.GenerateOperationIds();
+            var document = await SwaggerDocument.FromJsonAsync(json);
+            document.GenerateOperationIds();
 
             //// Assert
-            Assert.AreEqual("pets", service.Operations.First().Operation.OperationId);
+            Assert.AreEqual("pets", document.Operations.First().Operation.OperationId);
+        }
+
+        [TestMethod]
+        public async Task ExtensionDataTest()
+        {
+            //// Arrange
+            var json = _jsonVendorExtensionData;
+
+            //// Act
+            var document = await SwaggerDocument.FromJsonAsync(json);
+
+            //// Assert
+            Assert.IsNotNull(document.Operations.First().Operation.ActualResponses["202"].ExtensionData);
+        }
+
+        [TestMethod]
+        public async Task When_locale_is_not_english_then_types_are_correctly_serialized()
+        {
+            // https://github.com/NSwag/NSwag/issues/518
+
+            //// Arrange
+            CultureInfo ci = new CultureInfo("tr-TR");
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
+            CultureInfo.DefaultThreadCurrentCulture = ci;
+
+            //// Act
+            var json = _sampleServiceCode;
+
+            //// Act
+            var document = await SwaggerDocument.FromJsonAsync(json);
+            var j = document.ToJson();
+
+            //// Assert
+            Assert.AreEqual(JsonObjectType.Integer, document.Definitions["Pet"].Properties["id"].Type);
         }
 
         private string _sampleServiceCode = 
@@ -88,7 +143,8 @@ namespace NSwag.Tests
       ""properties"": {
         ""id"": {
           ""type"": ""integer"",
-          ""format"": ""int64""
+          ""format"": ""int64"",
+          ""readOnly"": ""true""
         },
         ""name"": {
           ""type"": ""string""
@@ -100,5 +156,128 @@ namespace NSwag.Tests
     }
   }
 }";
+
+        private string _jsonVendorExtensionData =
+                    @"{
+  ""swagger"": ""2.0"",
+  ""info"": {
+    ""title"": ""Swagger Test Sample"",
+    ""description"": ""Swagger Test"",
+    ""version"": ""1.0.0""
+  },
+  ""schemes"": [
+    ""https""
+  ],
+  ""basePath"": ""/api/v1"",
+  ""produces"": [
+    ""application/json""
+  ],
+  ""consumes"": [
+    ""application/json""
+  ],
+  ""host"": ""test.com"",
+  ""paths"": {
+    ""/12345/instances"": {
+      ""post"": {
+        ""summary"": ""Starts operation"",
+        ""description"": ""Starts operation to trigger a task"",
+        ""operationId"": ""123"",
+        ""parameters"": [
+          {
+            ""name"": ""API Parameters"",
+            ""required"": true,
+            ""in"": ""body"",
+            ""schema"": {
+              ""type"": ""object"",
+              ""properties"": {
+                ""data"": {
+                  ""type"": ""object"",
+                  ""properties"": {
+                    ""prop1"": {
+                      ""title"": ""title 1"",
+                      ""description"": ""description 1"",
+                      ""type"": ""string""
+                    },
+                    ""prop2"": {
+                      ""title"": ""title 2"",
+                      ""description"": ""descripiton 2"",
+                      ""type"": ""string""
+                    }
+                  }
+                },
+                ""options"": {
+                  ""type"": ""object"",
+                  ""properties"": {
+                    ""callbackUrl"": {
+                      ""title"": ""callbackUrl"",
+                      ""description"": ""A Url to return the results back"",
+                      ""type"": ""string""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            ""name"": ""token"",
+            ""type"": ""string"",
+            ""in"": ""query"",
+            ""description"": ""A security token""
+          }
+        ],
+        ""responses"": {
+          ""202"": {
+            ""description"": ""Accepted"",
+            ""x-callback-schema"": {
+              ""type"": ""object"",
+              ""properties"": {
+                ""returnData"": {
+                  ""type"": ""object"",
+                  ""properties"": {
+                    ""prop1"": {
+                      ""title"": ""title 1"",
+                      ""description"": ""description 1"",
+                      ""type"": ""string""
+                    },
+                    ""prop2"": {
+                      ""title"": ""title 2"",
+                      ""description"": ""descripiton 2"",
+                      ""type"": ""string""
+                    }
+                  }
+                },
+                ""workflow"": {
+                  ""type"": ""object"",
+                  ""properties"": {
+                    ""id"": ""123"",
+                    ""name"": ""Swagger Test""
+                  }
+                }
+              }
+            }
+          },
+          ""400"": {
+            ""description"": ""Bad Request""
+          },
+          ""404"": {
+            ""description"": ""Not Found""
+          },
+          ""429"": {
+            ""description"": ""Too Many Requests""
+          },
+          ""503"": {
+            ""description"": ""Service Unavailable - Overloaded""
+          },
+          ""default"": {
+            ""description"": ""Unexpected Error""
+          }
+        }
+      }
+    }
+  }
+}";
+
+
+
     }
 }

@@ -7,21 +7,38 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using NJsonSchema;
+using NSwag.Collections;
 
 namespace NSwag
 {
     /// <summary>Describes a JSON web service operation. </summary>
-    public class SwaggerOperation
+    public class SwaggerOperation : JsonExtensionObject
     {
         /// <summary>Initializes a new instance of the <see cref="SwaggerOperations"/> class.</summary>
         public SwaggerOperation()
         {
             Tags = new List<string>();
-            Parameters = new List<SwaggerParameter>();
-            Responses = new Dictionary<string, SwaggerResponse>();
+
+            var parameters = new ObservableCollection<SwaggerParameter>();
+            parameters.CollectionChanged += (sender, args) =>
+            {
+                foreach (var response in Parameters)
+                    response.Parent = this;
+            };
+            Parameters = parameters;
+
+            var responses = new ObservableDictionary<string, SwaggerResponse>();
+            responses.CollectionChanged += (sender, args) =>
+            {
+                foreach (var response in Responses.Values)
+                    response.Parent = this;
+            };
+            Responses = responses; 
         }
 
         /// <summary>Gets the parent operations list.</summary>
@@ -62,68 +79,55 @@ namespace NSwag
 
         /// <summary>Gets or sets the parameters.</summary>
         [JsonProperty(PropertyName = "parameters", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<SwaggerParameter> Parameters { get; set; }
+        public IList<SwaggerParameter> Parameters { get; }
+
+        /// <summary>Gets the actual parameters (a combination of all inherited and local parameters).</summary>
+        [JsonIgnore]
+        public IReadOnlyList<SwaggerParameter> ActualParameters
+        {
+            get
+            {
+                var allParameters = Parent?.Parameters == null ? Parameters :
+                    Parameters.Concat(Parent.Parameters)
+                    .GroupBy(p => p.Name + "|" + p.Kind)
+                    .Select(p => p.First());
+
+                return new ReadOnlyCollection<SwaggerParameter>(allParameters
+                    .Select(p => p.ActualSchema is SwaggerParameter ? (SwaggerParameter)p.ActualSchema : p)
+                    .ToList());
+            }
+        }
 
         /// <summary>Gets or sets the HTTP Status Code/Response pairs.</summary>
         [JsonProperty(PropertyName = "responses", Required = Required.Always, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public Dictionary<string, SwaggerResponse> Responses { get; set; }
+        public IDictionary<string, SwaggerResponse> Responses { get; }
 
         /// <summary>Gets or sets a value indicating whether the operation is deprecated.</summary>
         [JsonProperty(PropertyName = "deprecated", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool Deprecated { get; set; }
+        public bool IsDeprecated { get; set; }
 
         /// <summary>Gets or sets a security description.</summary>
         [JsonProperty(PropertyName = "security", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public SwaggerSecurityRequirement Security { get; set; }
+        public List<SwaggerSecurityRequirement> Security { get; set; }
 
-        /// <summary>Gets the list of MIME types the operation can consume, either from the operation or from the <see cref="SwaggerService"/>.</summary>
+        /// <summary>Gets the list of MIME types the operation can consume, either from the operation or from the <see cref="SwaggerDocument"/>.</summary>
         [JsonIgnore]
-        public IEnumerable<string> ActualConsumes
-        {
-            get { return Consumes ?? Parent.Parent.Consumes; }
-        }
+        public IEnumerable<string> ActualConsumes => Consumes ?? Parent.Parent.Consumes;
 
-        /// <summary>Gets the list of MIME types the operation can produce, either from the operation or from the <see cref="SwaggerService"/>.</summary>
+        /// <summary>Gets the list of MIME types the operation can produce, either from the operation or from the <see cref="SwaggerDocument"/>.</summary>
         [JsonIgnore]
-        public IEnumerable<string> ActualProduces
-        {
-            get { return Produces ?? Parent.Parent.Produces; }
-        }
+        public IEnumerable<string> ActualProduces => Produces ?? Parent.Parent.Produces;
 
-        /// <summary>Gets the actual schemes, either from the operation or from the <see cref="SwaggerService"/>.</summary>
+        /// <summary>Gets the actual schemes, either from the operation or from the <see cref="SwaggerDocument"/>.</summary>
         [JsonIgnore]
-        public IEnumerable<SwaggerSchema> ActualSchemes
-        {
-            get { return Schemes ?? Parent.Parent.Schemes; }
-        }
+        public IEnumerable<SwaggerSchema> ActualSchemes => Schemes ?? Parent.Parent.Schemes;
 
-        /// <summary>Gets the parameters from the operation and from the <see cref="SwaggerService"/>.</summary>
+        /// <summary>Gets the responses from the operation and from the <see cref="SwaggerDocument"/> and dereferences them if necessary.</summary>
         [JsonIgnore]
-        public IEnumerable<SwaggerParameter> AllParameters
-        {
-            get
-            {
-                var empty = new List<SwaggerParameter>(); 
-                return (Parameters ?? empty).Concat(Parent.Parameters ?? empty).Concat(Parent.Parent.Parameters ?? empty);
-            }
-        }
+        public IReadOnlyDictionary<string, SwaggerResponse> ActualResponses => Responses.ToDictionary(t => t.Key, t => t.Value.ActualResponse);
 
-        /// <summary>Gets the responses from the operation and from the <see cref="SwaggerService"/>.</summary>
+        /// <summary>Gets the actual security description, either from the operation or from the <see cref="SwaggerDocument"/>.</summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<string, SwaggerResponse> AllResponses
-        {
-            get
-            {
-                var empty = new Dictionary<string, SwaggerResponse>();
-                return (Responses ?? empty).Concat(Parent.Parent.Responses ?? empty).ToDictionary(t => t.Key, t => t.Value);
-            }
-        }
-
-        /// <summary>Gets the actual security description, either from the operation or from the <see cref="SwaggerService"/>.</summary>
-        [JsonIgnore]
-        public SwaggerSecurityRequirement ActualSecurity
-        {
-            get { return Security ?? Parent.Parent.Security; }
-        }
+        public List<SwaggerSecurityRequirement> ActualSecurity => Security ?? Parent.Parent.Security;
     }
 }

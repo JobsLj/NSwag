@@ -1,0 +1,92 @@
+﻿{
+  "swaggerGenerator": {
+    "webApiToSwagger": {
+      "assemblyPaths": [
+        "bin/NSwag.Integration.WebAPI.dll"
+      ],
+      "assemblyConfig": "Web.config",
+      "referencePaths": [],
+      "isAspNetCore": false,
+      "controllerNames": [
+        "NSwag.Integration.WebAPI.Controllers.GeoController",
+        "NSwag.Integration.WebAPI.Controllers.PersonsController"
+      ],
+      "defaultUrlTemplate": "api/{controller}/{action}/{id}",
+      "defaultPropertyNameHandling": "Default",
+      "defaultEnumHandling": "Integer",
+      "flattenInheritanceHierarchy": false,
+      "generateKnownTypes": true,
+      "generateXmlObjects": false,
+      "addMissingPathParameters": false,
+      "serviceHost": "localhost:13452",
+      "serviceSchemes": [
+        "http"
+      ],
+      "infoTitle": "Web API Swagger specification",
+      "infoVersion": "1.0.0",
+      "documentTemplate": "SwaggerDocumentTemplate.json",
+      "output": null
+    }
+  },
+  "codeGenerators": {
+    "swaggerToCSharpClient": {
+      "generateClientClasses": true,
+      "generateClientInterfaces": false,
+      "generateDtoTypes": true,
+      "injectHttpClient": false,
+      "generateExceptionClasses": true,
+      "exceptionClass": "SwaggerException",
+      "useHttpClientCreationMethod": false,
+      "useHttpRequestMessageCreationMethod": false,
+      "useBaseUrl": false,
+      "jsonConverters": [
+        "Newtonsoft.Json.Converters.StringEnumConverter"
+      ],
+      "clientClassAccessModifier": "public",
+      "generateContractsOutput": true,
+      "contractsNamespace": "NSwag.Integration.Console.Contracts",
+      "contractsOutputFilePath": "../NSwag.Integration.Console/ServiceClientsContracts.cs",
+      "className": "{controller}Client",
+      "namespace": "NSwag.Integration.Console",
+      "generateOptionalParameters": false,
+      "requiredPropertiesMustBeDefined": true,
+      "dateType": "System.DateTime",
+      "dateTimeType": "System.DateTime",
+      "timeType": "System.TimeSpan",
+      "timeSpanType": "System.TimeSpan",
+      "arrayType": "System.Collections.ObjectModel.ObservableCollection",
+      "dictionaryType": "System.Collections.Generic.Dictionary",
+      "classStyle": "Poco",
+      "operationGenerationMode": "MultipleClientsFromOperationId",
+      "generateDefaultValues": true,
+      "excludedTypeNames": [],
+      "wrapResponses": false,
+      "generateResponseClasses": true,
+      "responseClass": "SwaggerResponse",
+      "output": "../NSwag.Integration.Console/ServiceClients.cs"
+    },
+    "swaggerToCSharpController": {
+      "className": "{controller}",
+      "namespace": "MyNamespace",
+      "additionalNamespaceUsages": [
+        "System.Web.Http"
+      ],
+      "generateOptionalParameters": false,
+      "requiredPropertiesMustBeDefined": true,
+      "dateType": "System.DateTime",
+      "dateTimeType": "System.DateTime",
+      "timeType": "System.TimeSpan",
+      "timeSpanType": "System.TimeSpan",
+      "arrayType": "System.Collections.Generic.List",
+      "dictionaryType": "System.Collections.Generic.Dictionary",
+      "classStyle": "Inpc",
+      "operationGenerationMode": "MultipleClientsFromOperationId",
+      "generateDefaultValues": true,
+      "excludedTypeNames": [],
+      "wrapResponses": false,
+      "generateResponseClasses": true,
+      "responseClass": "SwaggerResponse",
+      "output": "../NSwag.Integration.Console/Controllers.cs"
+    }
+  }
+}

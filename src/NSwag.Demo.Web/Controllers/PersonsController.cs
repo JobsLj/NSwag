@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
-using Newtonsoft.Json;
 using NSwag.Annotations;
-using NSwag.CodeGeneration.SwaggerGenerators.WebApi;
 using NSwag.Demo.Web.Models;
+using NSwag.SwaggerGeneration.WebApi;
 
 namespace NSwag.Demo.Web.Controllers
 {
@@ -33,6 +30,7 @@ namespace NSwag.Demo.Web.Controllers
         }
 
         // GET: api/Person
+        [Obsolete]
         public IEnumerable<Person> Get()
         {
             return new Person[]
@@ -44,10 +42,12 @@ namespace NSwag.Demo.Web.Controllers
 
         // GET: api/Person/5
         /// <summary>Gets a person.</summary>
-        /// <param name="id">The ID of the person.</param>
+        /// <param name="id">The ID of 
+        /// the person.</param>
         /// <returns>The person.</returns>
         [ResponseType(typeof(Person))]
         [ResponseType("500", typeof(PersonNotFoundException))]
+        [Route("{id}")]
         public HttpResponseMessage Get(int id)
         {
             return Request.CreateResponse(HttpStatusCode.OK, new Person { FirstName = "Rico", LastName = "Suter" });
@@ -56,6 +56,7 @@ namespace NSwag.Demo.Web.Controllers
         // POST: api/Person
         /// <summary>Creates a new person.</summary>
         /// <param name="value">The person.</param>
+        [HttpPost, Route("")]
         public void Post([FromBody]Person value)
         {
         }
@@ -69,6 +70,7 @@ namespace NSwag.Demo.Web.Controllers
         }
 
         // DELETE: api/Person/5
+        [Route("{id}")]
         public void Delete(int id)
         {
         }
@@ -76,29 +78,21 @@ namespace NSwag.Demo.Web.Controllers
         [HttpGet]
         [Route("Calculate/{a}/{b}")]
         [Description("Calculates the sum of a, b and c.")]
-        public int Calculate(int a, int b, int c)
+        public int Calculate(int a, int b, [Required]int c)
         {
             return a + b + c;
         }
 
         [HttpGet]
-        public DateTime AddHour(DateTime time)
+        [SwaggerIgnore]
+        public async Task<HttpResponseMessage> Swagger()
         {
-            return time.Add(TimeSpan.FromHours(1));
-        }
-
-        [HttpGet]
-        public Car LoadComplexObject()
-        {
-            return new Car();
-        }
-
-        [HttpGet]
-        public HttpResponseMessage Swagger()
-        {
-            var generator = new WebApiToSwaggerGenerator(Configuration.Routes.First(r => !string.IsNullOrEmpty(r.RouteTemplate)).RouteTemplate);
-            var service = generator.GenerateForController(GetType(), "Swagger");
-            return new HttpResponseMessage { Content = new StringContent(service.ToJson(), Encoding.UTF8) };
+            var generator = new WebApiToSwaggerGenerator(new WebApiToSwaggerGeneratorSettings
+            {
+                DefaultUrlTemplate = Configuration.Routes.First(r => !string.IsNullOrEmpty(r.RouteTemplate)).RouteTemplate
+            });
+            var document = await generator.GenerateForControllerAsync(GetType());
+            return new HttpResponseMessage { Content = new StringContent(document.ToJson(), Encoding.UTF8) };
         }
     }
 

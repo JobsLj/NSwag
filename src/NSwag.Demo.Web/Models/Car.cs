@@ -8,15 +8,19 @@ namespace NSwag.Demo.Web.Models
     {
         public string Name { get; set; }
         
+        //[ReadOnly(true)]
         public Person Driver { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public ObjectType Type { get; set; }
     }
 
+    /// <summary>Foo
+    /// bar</summary>
     public enum ObjectType
     {
         Foo, 
+
         Bar
     }
 }

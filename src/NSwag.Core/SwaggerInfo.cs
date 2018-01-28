@@ -7,15 +7,18 @@
 //-----------------------------------------------------------------------
 
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using NJsonSchema;
 
 namespace NSwag
 {
     /// <summary>The web service description.</summary>
-    public class SwaggerInfo
+    public class SwaggerInfo : JsonExtensionObject
     {
         /// <summary>Gets or sets the title.</summary>
-        [JsonProperty(PropertyName = "title", Required = Required.Always, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-        public string Title { get; set; }
+        [JsonProperty(PropertyName = "title", Required = Required.Always,
+            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        public string Title { get; set; } = "Swagger specification";
 
         /// <summary>Gets or sets the description.</summary>
         [JsonProperty(PropertyName = "description", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
@@ -35,6 +38,6 @@ namespace NSwag
 
         /// <summary>Gets or sets the API version.</summary>
         [JsonProperty(PropertyName = "version", Required = Required.Always, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-        public string Version { get; set; }
+        public string Version { get; set; } = "1.0.0";
     }
 }

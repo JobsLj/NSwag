@@ -7,7 +7,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Windows;
+using MyToolkit.Dialogs;
 
 namespace NSwagStudio.ViewModels
 {
@@ -18,7 +20,20 @@ namespace NSwagStudio.ViewModels
         /// <param name="exception">The exception.</param>
         public override void HandleException(Exception exception)
         {
-            MessageBox.Show(exception.Message);
+            ExceptionBox.Show("An error occured", exception, Application.Current.MainWindow);
+        }
+
+        protected string FromStringArray(string[] array)
+        {
+            return array != null ? string.Join(",", array) : "";
+        }
+
+        protected string[] ToStringArray(string value)
+        {
+            if (value != null)
+                return value.Split(',').Select(n => n.Trim()).Where(n => !string.IsNullOrEmpty(n)).ToArray();
+            else
+                return new string[] { };
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NJsonSchema;
-using NSwag.CodeGeneration.ClientGenerators.CSharp;
-using NSwag.CodeGeneration.ClientGenerators.TypeScript;
+using NJsonSchema.CodeGeneration.TypeScript;
+using NJsonSchema.Generation;
+using NSwag.CodeGeneration.CSharp;
+using NSwag.CodeGeneration.TypeScript;
 
 namespace NSwag.CodeGeneration.Tests
 {
@@ -12,15 +14,17 @@ namespace NSwag.CodeGeneration.Tests
     public class CodeGenerationTests
     {
         [TestMethod]
-        public void When_generating_CSharp_code_then_output_contains_expected_classes()
+        public async Task When_generating_CSharp_code_then_output_contains_expected_classes()
         {
             // Arrange
-            var service = CreateService();
+            var document = await CreateDocumentAsync();
+            var json = document.ToJson();
 
             //// Act
-            var generator = new SwaggerToCSharpGenerator(service);
-            generator.Class = "MyClass";
-            generator.Namespace = "MyNamespace";
+            var settings = new SwaggerToCSharpClientGeneratorSettings { ClassName = "MyClass" };
+            settings.CSharpGeneratorSettings.Namespace = "MyNamespace";
+
+            var generator = new SwaggerToCSharpClientGenerator(document, settings);
             var code = generator.GenerateFile();
 
             // Assert
@@ -31,14 +35,20 @@ namespace NSwag.CodeGeneration.Tests
         }
 
         [TestMethod]
-        public void When_generating_TypeScript_code_then_output_contains_expected_classes()
+        public async Task When_generating_TypeScript_code_then_output_contains_expected_classes()
         {
             // Arrange
-            var service = CreateService();
+            var document = await CreateDocumentAsync();
 
             //// Act
-            var generator = new SwaggerToTypeScriptGenerator(service);
-            generator.Class = "MyClass";
+            var generator = new SwaggerToTypeScriptClientGenerator(document, new SwaggerToTypeScriptClientGeneratorSettings
+            {
+                ClassName = "MyClass",
+                TypeScriptGeneratorSettings = 
+                {
+                    TypeStyle = TypeScriptTypeStyle.Interface
+                }
+            });
             var code = generator.GenerateFile();
 
             // Assert
@@ -48,7 +58,7 @@ namespace NSwag.CodeGeneration.Tests
         }
 
         [TestMethod]
-        public void When_using_json_schema_with_references_in_service_then_references_are_correctly_resolved()
+        public async Task When_using_json_schema_with_references_in_service_then_references_are_correctly_resolved()
         {
             //// Arrange
             var jsonSchema = @"{
@@ -76,33 +86,39 @@ namespace NSwag.CodeGeneration.Tests
   },
   ""type"": ""object""
 }";
-            
+
             //// Act
-            var schema = JsonSchema4.FromJson(jsonSchema);
-            var service = new SwaggerService();
-            service.Definitions["Foo"] = schema;
+            var schema = await JsonSchema4.FromJsonAsync(jsonSchema);
+            var document = new SwaggerDocument();
+            document.Definitions["Foo"] = schema;
 
             //// Assert
-            var jsonService = service.ToJson(); // no exception expected
+            var jsonService = document.ToJson(); // no exception expected
         }
 
-        private static SwaggerService CreateService()
+        private static async Task<SwaggerDocument> CreateDocumentAsync()
         {
-            var service = new SwaggerService();
-            service.Paths["/Person"] = new SwaggerOperations();
-            service.Paths["/Person"][SwaggerOperationMethod.Get] = new SwaggerOperation
+            var document = new SwaggerDocument();
+            var settings = new JsonSchemaGeneratorSettings();
+            var generator = new JsonSchemaGenerator(settings);
+
+            document.Paths["/Person"] = new SwaggerOperations();
+            document.Paths["/Person"][SwaggerOperationMethod.Get] = new SwaggerOperation
             {
-                Responses = new Dictionary<string, SwaggerResponse>
+                Responses = 
                 {
                     {
                         "200", new SwaggerResponse
                         {
-                            Schema = JsonSchema4.FromType(typeof (Person))
+                            Schema = new JsonSchema4
+                            {
+                                SchemaReference = await generator.GenerateAsync(typeof(Person), new SwaggerSchemaResolver(document, settings))
+                            }
                         }
                     }
                 }
             };
-            return service;
+            return document;
         }
     }
 
